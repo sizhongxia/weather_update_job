@@ -1,10 +1,11 @@
 package routers
 
 import (
-	"update_weather_job/controllers"
+	"weather_update_job/controllers"
+
 	"github.com/astaxie/beego"
 )
 
 func init() {
-    beego.Router("/", &controllers.MainController{})
+	beego.Router("/", &controllers.MainController{})
 }
