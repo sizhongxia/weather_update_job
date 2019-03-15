@@ -1,8 +1,8 @@
 package main
 
 import (
-	_ "weather_update_job/routers"
-	"weather_update_job/utils"
+	_ "yeetong_zhny_platform_job/routers"
+	"yeetong_zhny_platform_job/utils"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
@@ -11,20 +11,21 @@ import (
 
 func main() {
 	defer toolbox.StopTask()
-	cron := beego.AppConfig.String("cron")
-	apiurl := beego.AppConfig.String("apiurl")
-	logs.Info("cron=" + cron)
-	logs.Info("apiurl=" + apiurl)
-	tk1 := toolbox.NewTask("tk1", cron, func() error {
-		err, res := utils.FetchPost(nil, apiurl)
+
+	weathercron := beego.AppConfig.String("weathercron")
+	weatherupdateapiurl := beego.AppConfig.String("weatherupdateapiurl")
+	logs.Info("weather cron=" + weathercron)
+	logs.Info("weather update api url=" + weatherupdateapiurl)
+
+	weatherupdatetask := toolbox.NewTask("weatherupdatetask", weathercron, func() error {
+		err, _ := utils.FetchPost(nil, weatherupdateapiurl)
 		if err != nil {
 			logs.Error(err)
-		} else {
-			logs.Info(res)
 		}
 		return nil
 	})
-	toolbox.AddTask("tk1", tk1)
+	toolbox.AddTask("weatherupdatetask", weatherupdatetask)
+
 	toolbox.StartTask()
 	beego.Run()
 }
